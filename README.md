@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ⚡ NEXUS.STUDIO
 
-## Getting Started
+A premium, futuristic AI image generation and inpainting studio built with Next.js and Stable Diffusion XL. 
 
-First, run the development server:
+Nexus Studio provides a seamless, glassmorphism-inspired interface to interact with cutting-edge generative AI. It features both a standard Text-to-Image prompt matrix and an interactive HTML5 Canvas editor for precision image inpainting and modification.
 
+## ✨ Core Features
+* **Text-to-Image Synthesis:** High-fidelity generation using `stability-ai/sdxl`.
+* **Inpaint Editor:** Interactive HTML5 canvas allows users to upload, mask, and modify specific regions of an image.
+* **Dynamic Versioning:** Built-in safeguards automatically fetch the latest Replicate model hashes to prevent API decay.
+* **Premium UI:** Responsive, cyberpunk-inspired glassmorphism design using Tailwind CSS v4 and Framer Motion.
+
+## 🛠️ Tech Stack
+* **Framework:** [Next.js](https://nextjs.org/) (App Router)
+* **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
+* **Animations:** [Framer Motion](https://www.framer.com/motion/)
+* **Icons:** [Lucide React](https://lucide.dev/)
+* **AI Engine:** [Replicate](https://replicate.com/) (Node.js SDK)
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
+```bash
+git clone [https://github.com/mouhamedsalhy96-a11y/nexus-studio]
+(https://github.com/mouhamedsalhy96-a11y/nexus-studio)
+cd nexus-studio
+2. Install dependencies
+```bash
+npm install
+3. Set up your environment
+Create a .env.local file in the root directory and add your Replicate API token (ensure your Replicate account has billing enabled):
+
+Code snippet
+REPLICATE_API_TOKEN=r8_your_actual_token_here
+4. Run the development server
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
