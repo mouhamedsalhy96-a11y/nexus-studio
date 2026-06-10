@@ -24,14 +24,14 @@ Nexus Studio provides a seamless, glassmorphism-inspired interface to interact w
 git clone [https://github.com/mouhamedsalhy96-a11y/nexus-studio]
 (https://github.com/mouhamedsalhy96-a11y/nexus-studio)
 cd nexus-studio
-2. Install dependencies
+### 2. Install dependencies
 ```bash
 npm install
-3. Set up your environment
+### 3. Set up your environment
 Create a .env.local file in the root directory and add your Replicate API token (ensure your Replicate account has billing enabled):
 
 Code snippet
 REPLICATE_API_TOKEN=r8_your_actual_token_here
-4. Run the development server
+### 4. Run the development server
 ```bash
 npm run dev
