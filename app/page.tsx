@@ -34,6 +34,7 @@ export default function Home() {
   const [aspectRatio, setAspectRatio] = useState("1:1");
   const [loading, setLoading] = useState(false);
   const [upscaling, setUpscaling] = useState(false);
+  const [downloading, setDownloading] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [history, setHistory] = useState<GenerationRecord[]>([]);
 
@@ -90,7 +91,6 @@ export default function Home() {
       
       if (response.ok && data.output) {
         setGeneratedImage(data.output);
-        // Add the upscaled version to history as well
         setHistory((prev) => [{ url: data.output, prompt: `[UPSCALED] ${prompt}` }, ...prev]);
       } else {
         alert(data.error || "Failed to upscale image.");
@@ -100,6 +100,38 @@ export default function Home() {
       alert("A network error occurred while upscaling.");
     } finally {
       setUpscaling(false);
+    }
+  };
+
+  // Programmatic download function to bypass CORS restrictions
+  const forceDownload = async (imageUrl: string, promptText: string) => {
+    setDownloading(true);
+    try {
+      // Fetch the image as a Blob directly from the external URL
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      
+      // Create a temporary local URL
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      // Create a temporary anchor element
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      
+      // Create a clean filename from the first 30 characters of the prompt
+      const safeName = promptText.replace(/[^a-z0-9]/gi, '_').toLowerCase().slice(0, 30);
+      link.download = `nexus_${safeName || "generation"}.png`;
+      
+      // Trigger the download and clean up
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Download failed:", error);
+      alert("Download failed. You can still right-click the image and select 'Save Image As...'.");
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -240,15 +272,14 @@ export default function Home() {
                               <Maximize size={16} />
                               <span className="hidden sm:inline">Upscale</span>
                             </button>
-                            <a
-                              href={generatedImage}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="p-2 bg-slate-900 border border-slate-700 hover:border-cyan-500 hover:text-cyan-300 rounded-lg text-cyan-500 transition-colors"
-                              title="Open full resolution in new tab to save"
+                            <button
+                              onClick={() => forceDownload(generatedImage, prompt)}
+                              disabled={downloading}
+                              className="p-2 bg-slate-900 border border-slate-700 hover:border-cyan-500 hover:text-cyan-300 rounded-lg text-cyan-500 transition-colors flex items-center"
+                              title="Download Full Image"
                             >
-                              <Download size={18} />
-                            </a>
+                              {downloading ? <RefreshCw size={18} className="animate-spin" /> : <Download size={18} />}
+                            </button>
                           </div>
                         </div>
                       </motion.div>
@@ -291,8 +322,16 @@ export default function Home() {
                       {history.map((record, idx) => (
                         <div key={idx} className="relative group rounded-lg overflow-hidden border border-slate-800 aspect-square bg-slate-900">
                           <img src={record.url} alt={`History ${idx}`} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
-                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-3 cursor-pointer" onClick={() => setGeneratedImage(record.url)}>
-                            <p className="text-[10px] text-center text-slate-300 line-clamp-4 leading-tight">{record.prompt}</p>
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3">
+                            <p className="text-[10px] text-center text-slate-300 line-clamp-4 leading-tight cursor-pointer" onClick={() => setGeneratedImage(record.url)}>
+                              {record.prompt}
+                            </p>
+                            <button 
+                              onClick={() => forceDownload(record.url, record.prompt)}
+                              className="mx-auto p-1.5 bg-slate-900/80 border border-slate-700 hover:border-cyan-500 hover:text-cyan-300 rounded-md text-slate-400 transition-colors"
+                            >
+                              <Download size={14} />
+                            </button>
                           </div>
                         </div>
                       ))}
